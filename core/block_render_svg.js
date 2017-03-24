@@ -52,7 +52,7 @@ Blockly.BlockSvg.INLINE_PADDING_Y = 5;
  * Minimum height of a block.
  * @const
  */
-Blockly.BlockSvg.MIN_BLOCK_Y = 25;
+Blockly.BlockSvg.MIN_BLOCK_Y = 40;
 /**
  * Height of horizontal puzzle tab.
  * @const
@@ -392,7 +392,7 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     // The width is currently only needed for inline value inputs.
     if (isInline && input.type == Blockly.INPUT_VALUE) {
       input.renderWidth = Blockly.BlockSvg.TAB_WIDTH +
-          Blockly.BlockSvg.SEP_SPACE_X * 1.25;
+          Blockly.BlockSvg.SEP_SPACE_X * 2.5;
     } else {
       input.renderWidth = 0;
     }
@@ -542,17 +542,13 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.renderDrawBottom_(steps, highlightSteps, cursorY);
   this.renderDrawLeft_(steps, highlightSteps);
 
-  var pathString = steps.join(' ') + '\n' + inlineSteps.join(' ');
-  this.svgPath_.setAttribute('d', pathString);
-  this.svgPathDark_.setAttribute('d', pathString);
-  pathString = highlightSteps.join(' ') + '\n' + highlightInlineSteps.join(' ');
-  this.svgPathLight_.setAttribute('d', pathString);
-  if (this.RTL) {
-    // Mirror the block's path.
-    this.svgPath_.setAttribute('transform', 'scale(-1 1)');
-    this.svgPathLight_.setAttribute('transform', 'scale(-1 1)');
-    this.svgPathDark_.setAttribute('transform', 'translate(1,1) scale(-1 1)');
-  }
+    var pathString = steps.join(' ') + '\n' + inlineSteps.join(' ');
+    this.svgPath_.setAttribute('d', pathString);
+    pathString = highlightSteps.join(' ') + '\n' + highlightInlineSteps.join(' ');
+    if (this.RTL) {
+        // Mirror the block's path.
+        this.svgPath_.setAttribute('transform', 'scale(-1 1)');
+    }
 };
 
 /**

@@ -733,10 +733,11 @@ Blockly.BlockSvg.prototype.onMouseUp_ = function(e) {
  * @private
  */
 Blockly.BlockSvg.prototype.showHelp_ = function() {
-  var url = goog.isFunction(this.helpUrl) ? this.helpUrl() : this.helpUrl;
-  if (url) {
-    window.open(url);
-  }
+    if (goog.isFunction(this.helpUrl)) {
+        this.helpUrl();
+    } else {
+        window.open(this.helpUrl);
+    }
 };
 
 /**
@@ -766,24 +767,6 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
     }
     menuOptions.push(duplicateOption);
 
-    if (this.isEditable() && !this.collapsed_ &&
-        this.workspace.options.comments) {
-      // Option to add/remove a comment.
-      var commentOption = {enabled: !goog.userAgent.IE};
-      if (this.comment) {
-        commentOption.text = Blockly.Msg.REMOVE_COMMENT;
-        commentOption.callback = function() {
-          block.setCommentText(null);
-        };
-      } else {
-        commentOption.text = Blockly.Msg.ADD_COMMENT;
-        commentOption.callback = function() {
-          block.setCommentText('');
-        };
-      }
-      menuOptions.push(commentOption);
-    }
-
     // Option to make block inline.
     if (!this.collapsed_) {
       for (var i = 1; i < this.inputList.length; i++) {
@@ -802,38 +785,6 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
           break;
         }
       }
-    }
-
-    if (this.workspace.options.collapse) {
-      // Option to collapse/expand block.
-      if (this.collapsed_) {
-        var expandOption = {enabled: true};
-        expandOption.text = Blockly.Msg.EXPAND_BLOCK;
-        expandOption.callback = function() {
-          block.setCollapsed(false);
-        };
-        menuOptions.push(expandOption);
-      } else {
-        var collapseOption = {enabled: true};
-        collapseOption.text = Blockly.Msg.COLLAPSE_BLOCK;
-        collapseOption.callback = function() {
-          block.setCollapsed(true);
-        };
-        menuOptions.push(collapseOption);
-      }
-    }
-
-    if (this.workspace.options.disable) {
-      // Option to disable/enable block.
-      var disableOption = {
-        text: this.disabled ?
-            Blockly.Msg.ENABLE_BLOCK : Blockly.Msg.DISABLE_BLOCK,
-        enabled: !this.getInheritedDisabled(),
-        callback: function() {
-          block.setDisabled(!block.disabled);
-        }
-      };
-      menuOptions.push(disableOption);
     }
 
     // Option to delete this block.
@@ -858,8 +809,7 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
   }
 
   // Option to get help.
-  var url = goog.isFunction(this.helpUrl) ? this.helpUrl() : this.helpUrl;
-  var helpOption = {enabled: !!url};
+  var helpOption = {enabled: !!this.helpUrl};
   helpOption.text = Blockly.Msg.HELP;
   helpOption.callback = function() {
     block.showHelp_();
@@ -1352,37 +1302,32 @@ Blockly.BlockSvg.disconnectUiStop_.group = null;
  * Change the colour of a block.
  */
 Blockly.BlockSvg.prototype.updateColour = function() {
-  if (this.disabled) {
-    // Disabled blocks don't have colour.
-    return;
-  }
-  var hexColour = this.getColour();
-  var rgb = goog.color.hexToRgb(hexColour);
-  if (this.isShadow()) {
-    rgb = goog.color.lighten(rgb, 0.6);
-    hexColour = goog.color.rgbArrayToHex(rgb);
-    this.svgPathLight_.style.display = 'none';
-    this.svgPathDark_.setAttribute('fill', hexColour);
-  } else {
-    this.svgPathLight_.style.display = '';
-    var hexLight = goog.color.rgbArrayToHex(goog.color.lighten(rgb, 0.3));
-    var hexDark = goog.color.rgbArrayToHex(goog.color.darken(rgb, 0.2));
-    this.svgPathLight_.setAttribute('stroke', hexLight);
-    this.svgPathDark_.setAttribute('fill', hexDark);
-  }
-  this.svgPath_.setAttribute('fill', hexColour);
-
-  var icons = this.getIcons();
-  for (var i = 0; i < icons.length; i++) {
-    icons[i].updateColour();
-  }
-
-  // Bump every dropdown to change its colour.
-  for (var x = 0, input; input = this.inputList[x]; x++) {
-    for (var y = 0, field; field = input.fieldRow[y]; y++) {
-      field.setText(null);
+    if (this.disabled) {
+        // Disabled blocks don't have colour.
+        return;
     }
-  }
+    var hexColour = this.getColour();
+    var rgb = goog.color.hexToRgb(hexColour);
+    if (this.isShadow()) {
+        rgb = goog.color.lighten(rgb, 0.6);
+        hexColour = goog.color.rgbArrayToHex(rgb);
+    } else {
+        var hexLight = goog.color.rgbArrayToHex(goog.color.lighten(rgb, 0.3));
+        var hexDark = goog.color.rgbArrayToHex(goog.color.darken(rgb, 0.2));
+    }
+    this.svgPath_.setAttribute('fill', hexColour);
+
+    var icons = this.getIcons();
+    for (var i = 0; i < icons.length; i++) {
+        icons[i].updateColour();
+    }
+
+    // Bump every dropdown to change its colour.
+    for (var x = 0, input; input = this.inputList[x]; x++) {
+        for (var y = 0, field; field = input.fieldRow[y]; y++) {
+            field.setText(null);
+        }
+    }
 };
 
 /**
@@ -1561,17 +1506,15 @@ Blockly.BlockSvg.prototype.setDisabled = function(disabled) {
  * @param {boolean} highlighted True if highlighted.
  */
 Blockly.BlockSvg.prototype.setHighlighted = function(highlighted) {
-  if (!this.rendered) {
-    return;
-  }
-  if (highlighted) {
-    this.svgPath_.setAttribute('filter',
-        'url(#' + this.workspace.options.embossFilterId + ')');
-    this.svgPathLight_.style.display = 'none';
-  } else {
-    this.svgPath_.removeAttribute('filter');
-    delete this.svgPathLight_.style.display;
-  }
+    if (!this.rendered) {
+        return;
+    }
+    if (highlighted) {
+        this.svgPath_.setAttribute('filter',
+            'url(#' + this.workspace.options.embossFilterId + ')');
+    } else {
+        this.svgPath_.removeAttribute('filter');
+    }
 };
 
 /**
