@@ -358,6 +358,11 @@ Blockly.Toolbox.prototype.syncTrees_ = function (treeIn, treeOut, pathToMedia) {
                             lastElement.setAttribute('gap', newGap);
                         }
                     }
+                } else {
+                    // Separator between two categories.
+                    // <sep></sep>
+                    treeOut.add(new Blockly.Toolbox.TreeSeparator(
+                        this.treeSeparatorConfig_, childIn.getAttribute('text')));
                 }
                 break;
             case 'BLOCK':
@@ -653,7 +658,8 @@ Blockly.Toolbox.TreeNode.prototype.onKeyDown = function (e) {
  * @constructor
  * @extends {Blockly.Toolbox.TreeNode}
  */
-Blockly.Toolbox.TreeSeparator = function (config) {
-    Blockly.Toolbox.TreeNode.call(this, null, '', config);
+Blockly.Toolbox.TreeSeparator = function (config, opt_html) {
+    Blockly.Toolbox.TreeNode.call(this, null, opt_html ?
+        goog.html.SafeHtml.htmlEscape(opt_html) : '', config);
 };
 goog.inherits(Blockly.Toolbox.TreeSeparator, Blockly.Toolbox.TreeNode);
