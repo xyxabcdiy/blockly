@@ -195,7 +195,7 @@ Blockly.Flyout.prototype.containerVisible_ = true;
  * @type {number}
  * @const
  */
-Blockly.Flyout.prototype.CORNER_RADIUS = 8;
+Blockly.Flyout.prototype.CORNER_RADIUS = 0;
 
 /**
  * Number of pixels the mouse must move before a drag/scroll starts. Because the
@@ -209,7 +209,7 @@ Blockly.Flyout.prototype.DRAG_RADIUS = 10;
  * @type {number}
  * @const
  */
-Blockly.Flyout.prototype.MARGIN = Blockly.Flyout.prototype.CORNER_RADIUS;
+Blockly.Flyout.prototype.MARGIN = 8;
 
 /**
  * Gap between items in horizontal flyouts. Can be overridden with the "sep"
