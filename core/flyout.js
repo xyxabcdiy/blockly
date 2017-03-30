@@ -211,6 +211,8 @@ Blockly.Flyout.prototype.DRAG_RADIUS = 10;
  */
 Blockly.Flyout.prototype.MARGIN = 8;
 
+Blockly.Flyout.prototype.MARGIN_BOTTOM_ = 50;
+
 /**
  * Gap between items in horizontal flyouts. Can be overridden with the "sep"
  * element.
@@ -1444,7 +1446,7 @@ Blockly.Flyout.prototype.reflowVertical = function (blocks) {
             }
             if (block.flyoutRect_) {
                 block.flyoutRect_.setAttribute('width', blockHW.width);
-                block.flyoutRect_.setAttribute('height', blockHW.height);
+                block.flyoutRect_.setAttribute('height', blockHW.height + this.MARGIN_BOTTOM_);
                 // Blocks with output tabs are shifted a bit.
                 var tab = block.outputConnection ? Blockly.BlockSvg.TAB_WIDTH : 0;
                 var blockXY = block.getRelativeToSurfaceXY();

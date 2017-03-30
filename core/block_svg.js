@@ -60,24 +60,8 @@ Blockly.BlockSvg = function(workspace, prototypeName, opt_id) {
    * @type {SVGElement}
    * @private
    */
-  this.svgPathDark_ = Blockly.utils.createSvgElement('path',
-      {'class': 'blocklyPathDark', 'transform': 'translate(1,1)'},
-      this.svgGroup_);
-
-  /**
-   * @type {SVGElement}
-   * @private
-   */
   this.svgPath_ = Blockly.utils.createSvgElement('path', {'class': 'blocklyPath'},
       this.svgGroup_);
-
-  /**
-   * @type {SVGElement}
-   * @private
-   */
-  this.svgPathLight_ = Blockly.utils.createSvgElement('path',
-      {'class': 'blocklyPathLight'}, this.svgGroup_);
-  this.svgPath_.tooltip = this;
 
   /** @type {boolean} */
   this.rendered = false;
