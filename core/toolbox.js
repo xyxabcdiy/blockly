@@ -480,30 +480,6 @@ goog.inherits(Blockly.Toolbox.TreeControl, goog.ui.tree.TreeControl);
  */
 Blockly.Toolbox.TreeControl.prototype.enterDocument = function () {
     Blockly.Toolbox.TreeControl.superClass_.enterDocument.call(this);
-
-    // Add touch handler.
-    if (goog.events.BrowserFeature.TOUCH_ENABLED) {
-        var el = this.getElement();
-        Blockly.bindEventWithChecks_(el, goog.events.EventType.TOUCHSTART, this,
-            this.handleTouchEvent_);
-    }
-};
-
-/**
- * Handles touch events.
- * @param {!goog.events.BrowserEvent} e The browser event.
- * @private
- */
-Blockly.Toolbox.TreeControl.prototype.handleTouchEvent_ = function (e) {
-    e.preventDefault();
-    var node = this.getNodeFromEvent_(e);
-    if (node && e.type === goog.events.EventType.TOUCHSTART) {
-        // Fire asynchronously since onMouseDown takes long enough that the browser
-        // would fire the default mouse event before this method returns.
-        setTimeout(function () {
-            node.onMouseDown(e);  // Same behaviour for click and touch.
-        }, 1);
-    }
 };
 
 /**
